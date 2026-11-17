@@ -18,7 +18,7 @@ class ErrorDetail(BaseModel):
 class ErrorEnvelope(BaseModel):
     code: str
     message: str
-    details: dict[str, Any] = {}
+    details: dict[str, Any] = Field(default_factory=dict)
     request_id: str | None = None
 
 
@@ -191,8 +191,8 @@ class DocumentResponse(BaseModel):
     uploaded_at: Optional[datetime] = None
     summary: Optional[str] = None
     task_id: Optional[str] = None
-    keywords: Optional[List[str]] = []
-    extracted_urls: Optional[List[str]] = []
+    keywords: Optional[List[str]] = Field(default_factory=list)
+    extracted_urls: Optional[List[str]] = Field(default_factory=list)
 
     @field_validator("id", mode="before")
     @classmethod
@@ -231,7 +231,7 @@ class BatchUploadResponse(BaseModel):
     documents: List[DocumentResponse]
     task_ids: List[str]
     total: int
-    failed: List[str] = []
+    failed: List[str] = Field(default_factory=list)
 
 class DocumentRename(BaseModel):
     name: str = Field(..., min_length=1, max_length=255)
@@ -281,7 +281,7 @@ class DocumentStatusResponse(BaseModel):
 
 
 class DocumentListResponse(BaseModel):
-    items: List[DocumentResponse] = []
+    items: List[DocumentResponse] = Field(default_factory=list)
     total: int = 0
     page: int = 1
     pages: int = 1
@@ -342,7 +342,7 @@ class SourceChunk(BaseModel):
 
 class ChatResponse(BaseModel):
     answer: str
-    sources: List[SourceChunk] = []
+    sources: List[SourceChunk] = Field(default_factory=list)
     document_id: Optional[str] = None
 
 
@@ -354,7 +354,7 @@ class ChatMessageResponse(BaseModel):
     id: str
     role: str
     content: str
-    sources: List[SourceChunk] = []
+    sources: List[SourceChunk] = Field(default_factory=list)
     feedback: Optional[str] = None
     created_at: datetime
 
@@ -384,7 +384,7 @@ class UploadUrl(BaseModel):
 class ShareAnswerResponse(BaseModel):
     id: str
     content: str
-    sources: List[SourceChunk] = []
+    sources: List[SourceChunk] = Field(default_factory=list)
     created_at: datetime
 
 
@@ -393,8 +393,7 @@ class ShareLinkResponse(BaseModel):
     share_url: str
 
 
-class FeedbackRequest(BaseModel):
-    feedback: Optional[str] = Field(None, pattern="^(up|down)?$")
+
 
 
 # ── Chat Session ──────────────────────────────────────
